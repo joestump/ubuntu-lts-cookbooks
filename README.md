@@ -12,3 +12,5 @@ The current state of Chef community cookbooks leaves much to be desired. Monolit
 * Leverage LWRPs whenever possible.
 * Configured entirely via environment, role, and/or node attributes.
 * Use Upstart for all services.
+* Turn default SSL and other secure transports for services whenever possible.
+* Assume nodes are running on EC2.
