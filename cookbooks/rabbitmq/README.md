@@ -2,64 +2,121 @@
 
 A Chef cookbook to install and configure RabbitMQ server on Ubuntu Server LTS. This cookbook is a fork of the community [rabbitmq](https://github.com/opscode-cookbooks/rabbitmq/blob/master/recipes/mgmt_console.rb) cookbook targeted at Ubuntu Server LTS. 
 
-Requirements
-------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
+## Resources/Providers
 
-e.g.
-#### packages
-- `toaster` - rabbitmq needs toaster to brown your bagel.
+### plugin
+Enables or disables a rabbitmq plugin. Plugins are not supported for releases prior to 2.7.0.
 
-Attributes
-----------
-TODO: List you cookbook attributes here.
+- `:enable` enables a `plugin`
+- `:disable` disables a `plugin`
 
-e.g.
-#### rabbitmq::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['rabbitmq']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
-
-Usage
------
-#### rabbitmq::default
-TODO: Write usage instructions for each cookbook.
-
-e.g.
-Just include `rabbitmq` in your node's `run_list`:
-
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[rabbitmq]"
-  ]
-}
+#### Examples
+```ruby
+rabbitmq_plugin "rabbitmq_stomp" do
+  action :enable
+end
 ```
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
+```ruby
+rabbitmq_plugin "rabbitmq_shovel" do
+  action :disable
+end
+```
 
-e.g.
-1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
-3. Write you change
-4. Write tests for your change (if applicable)
-5. Run the tests, ensuring they all pass
-6. Submit a Pull Request using Github
+### policy
+sets or clears a rabbitmq policy.
 
-License and Authors
--------------------
-Authors: TODO: List authors
+- `:set` sets a `policy`
+- `:clear` clears a `policy`
+- `:list` lists `policy`s
+
+#### Examples
+```ruby
+rabbitmq_policy "ha-all" do
+  pattern "^(?!amq\\.).*"
+  params {"ha-mode"=>"all"}
+  priority 1
+  action :set
+end
+```
+
+```ruby
+rabbitmq_policy "ha-all" do
+  action :clear
+end
+```
+
+### user
+Adds and deletes users, fairly simplistic permissions management.
+
+- `:add` adds a `user` with a `password`
+- `:delete` deletes a `user`
+- `:set_permissions` sets the `permissions` for a `user`, `vhost` is optional
+- `:clear_permissions` clears the permissions for a `user`
+- `:set_tags` set the tags on a user
+- `:clear_tags` clear any tags on a user
+- `:change_password` set the `password` for a `user`
+
+#### Examples
+```ruby
+rabbitmq_user "guest" do
+  action :delete
+end
+```
+
+```ruby
+rabbitmq_user "nova" do
+  password "sekret"
+  action :add
+end
+```
+
+```ruby
+rabbitmq_user "nova" do
+  vhost "/nova"
+  permissions ".* .* .*"
+  action :set_permissions
+end
+```
+
+```ruby
+rabbitmq_user "joe" do
+  tag "admin,lead"
+  action :set_tags
+end
+```
+
+### vhost
+Adds and deletes vhosts.
+
+- `:add` adds a `vhost`
+- `:delete` deletes a `vhost`
+
+#### Examples
+``` ruby
+rabbitmq_vhost "/nova" do
+  action :add
+end
+```
+## License & Authors
+
+- Author:: Benjamin Black <b@b3k.us>
+- Author:: Daniel DeLeo <dan@kallistec.com>
+- Author:: Matt Ray <matt@opscode.com>
+- Author:: Joe Stump <joe@stu.mp>
+
+```text
+Copyright (c) 2009-2013, Opscode, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
