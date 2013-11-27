@@ -1,9 +1,6 @@
-rabbitmq Cookbook
-=================
-TODO: Enter the cookbook description here.
+# rabbitmq 
 
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+A Chef cookbook to install and configure RabbitMQ server on Ubuntu Server LTS. This cookbook is a fork of the community [rabbitmq](https://github.com/opscode-cookbooks/rabbitmq/blob/master/recipes/mgmt_console.rb) cookbook targeted at Ubuntu Server LTS. 
 
 Requirements
 ------------
